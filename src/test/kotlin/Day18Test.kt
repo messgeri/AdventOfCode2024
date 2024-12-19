@@ -6,7 +6,14 @@ internal class Day18Test{
 
     @Test
     fun test1StarInputData() {
-        val result = day.solveOneStar()
+        val result = day.solveStarOne()
         assertEquals(22, result)
+    }
+
+    @Test
+    fun test2StarInputData() {
+        val result = day.solveStarTwo()
+        assertEquals(6, result.first)
+        assertEquals(1, result.second)
     }
 }

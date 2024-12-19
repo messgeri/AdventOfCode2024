@@ -1,19 +1,17 @@
-public class Day18(val resourcePath : String = "Day18.txt", val gridSize : Int = 71, val errorCount : Int = 1024) {
+public class Day18(private val resourcePath : String = "Day18.txt",private val gridSize : Int = 71, private val errorCount : Int = 1024) {
     private var  grid = Array<Array<Int>>(gridSize){
         Array<Int>(gridSize) {Int.MAX_VALUE}
     }
-    //private var errors = ArrayList<Pair<Int, Int>>()
+    private var errors = ArrayList<Pair<Int, Int>>()
 
     init {
         val input = readResource(resourcePath)
-
+        input.lines().forEach{
+            val coords = it.split(",")
+            errors.add(Pair(coords[0].toInt(), coords[1].toInt()))
+        }
         for (i in 0 until errorCount){
-
-            val coords = input.lines()[i].split(",")
-            val x = coords[0].toInt()
-            val y = coords[1].toInt()
-
-            grid[x][y] = -1
+            grid[errors[i].first][errors[i].second] = -1
         }
     }
 
@@ -32,9 +30,29 @@ public class Day18(val resourcePath : String = "Day18.txt", val gridSize : Int =
         return x >= 0 && y >= 0 && x < gridSize  && y < gridSize && grid[x][y] != -1 && grid[x][y] > stepCount
     }
 
-    fun solveOneStar() : Int{
+    fun solveStarOne() : Int{
         stepSomewhere(0, 0,0)
         return grid[gridSize-1][gridSize-1]
     }
 
+    private fun resetGrid(){
+        grid.forEach {
+            for (i in it.indices) {
+                if(it[i] == -1) it[i] = -1
+                else it[i] = Int.MAX_VALUE
+            }
+        }
+    }
+
+    fun solveStarTwo() : Pair<Int, Int>{
+        var index = errorCount
+        var solution = 0
+        while(solution != Int.MAX_VALUE && solution != -1){
+            resetGrid()
+            grid[errors[index].first][errors[index].second] = -1
+            index++
+            solution = solveStarOne()
+        }
+        return errors[index - 1]
+    }
 }
